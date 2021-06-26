@@ -1,0 +1,36 @@
+{
+    "name": "raylin666/logger",
+    "description": "Log service component",
+    "keywords": [
+        "logs",
+        "file",
+        "filesystem",
+        "redis",
+        "logger"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "raylin666",
+            "email": "1099013371@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "monolog/monolog": "^2.0",
+        "raylin666/util": "^1.0"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "Raylin666\\Logger\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {}
+    },
+    "extra": {},
+    "packages": {},
+    "packages-dev": {}
+}
