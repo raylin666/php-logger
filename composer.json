@@ -19,7 +19,7 @@
     "require": {
         "php": ">=7.2",
         "monolog/monolog": "^2.0",
-        "raylin666/util": "^1.0"
+        "raylin666/utils": "^1.0"
     },
     "require-dev": {},
     "autoload": {
