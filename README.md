@@ -20,6 +20,51 @@ composer require "raylin666/logger"
 
 最简单的文件日志存储调用方式：
 
+```php
+<?php
+
+require_once 'vendor/autoload.php';
+
+$loggerConfig = [
+    'default' => [
+        'handlers' => [
+            [
+                'class'         =>  \Monolog\Handler\RotatingFileHandler::class,
+                'constructor'   => [
+                    'filename'      =>  'runtime/logs/raylin666.log',
+                    'maxFiles'      =>  31,
+                    'level'         =>  \Raylin666\Logger\Logger::DEBUG,
+                    'bubble'        =>  true,
+                    'filePermission'=>  0666,
+                    'useLocking'    =>  false,
+                ],
+            ]
+        ],
+        'formatter' => [
+            'class'         =>  \Monolog\Formatter\LineFormatter::class,
+            'constructor'   =>  [
+                'format'                        =>  "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n",
+                'dateFormat'                    =>  "Y-m-d H:i:s",
+                'allowInlineLineBreaks'         => true,
+                'ignoreEmptyContextAndExtra'    => false,
+            ]
+        ],
+    ],
+];
+
+$loggerFactory = new \Raylin666\Logger\LoggerFactory();
+foreach ($loggerConfig as $group => $item) {
+    $loggerOption = new \Raylin666\Logger\LoggerOptions($group, $item['handlers'] ?? [], $item['formatter'] ?? []);
+    $loggerFactory->make($loggerOption);
+}
+
+$loggerFactory->get('defalut')->info('hello world.');
+
+// 日志文件输出 raylin666-2021-06-26.log
+#  [2021-06-26 11:32:15] default.INFO: hello world. [] [] 
+
+```
+
 ## 更新日志
 
 请查看 [CHANGELOG.md](CHANGELOG.md)

@@ -11,11 +11,15 @@
 
 namespace Raylin666\Logger;
 
+use Monolog\Handler\FormattableHandlerInterface;
+use Monolog\Handler\HandlerInterface;
+use Raylin666\Contract\LoggerInterface;
+
 /**
  * Class LoggerFactory
  * @package Raylin666\Logger
  */
-class LoggerFactory
+class LoggerFactory implements LoggerFactoryInterface
 {
     /**
      * 日志集合
@@ -23,17 +27,38 @@ class LoggerFactory
      */
     protected $loggers = [];
 
-    public function make($channel = 'raylin666', LoggerOptions $loggerOptions)
+    /**
+     * @param LoggerOptions $loggerOptions
+     */
+    public function make(LoggerOptions $loggerOptions)
     {
-        if (isset($this->loggers[$channel])) {
+        $name = $loggerOptions->group();
+
+        if (isset($this->loggers[$name])) {
             return ;
         }
 
+        $handlers = $loggerOptions->getHandlers();
+        $formatter = $loggerOptions->getFormatter();
+        $logger = new Logger($name);
+        foreach ($handlers as $handler) {
+            /** @var HandlerInterface $handler */
+            $handler = new $handler['class'](...array_values($handler['constructor']));
+            if ($formatter && ($handler instanceof FormattableHandlerInterface)) {
+                $handler->setFormatter(new $formatter['class'](...array_values($formatter['constructor'])));
+            }
+            $logger->pushHandler($handler);
+        }
 
+        $this->loggers[$name] = $logger;
     }
 
-    public function get()
+    /**
+     * @param $name
+     * @return LoggerInterface|null
+     */
+    public function get($name): ?LoggerInterface
     {
-
+        return $this->loggers[$name] ?? null;
     }
 }
